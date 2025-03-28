@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PermissionsModule\Value;
 
-use PermissionValidationException;
+use PermissionsModule\Exception\PermissionValidationException;
 
 class Permission
 {

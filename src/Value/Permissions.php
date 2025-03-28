@@ -56,6 +56,17 @@ class Permissions implements IteratorAggregate, JsonSerializable, Countable
         return new self(...$mergedPermissions);
     }
 
+    public function hasPermission(int $permissionId): bool
+    {
+        foreach ($this->permissions as $permission) {
+            if ($permission->getPermissionId() === $permissionId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function jsonSerialize(): array
     {
         return $this->permissions;

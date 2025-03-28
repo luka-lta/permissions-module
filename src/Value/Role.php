@@ -8,16 +8,17 @@ class Role
 {
     public function __construct(
         private readonly ?int $roleId,
-        private readonly string $role,
-        private readonly Permissions $permissions,
+        private string $role,
+        private Permissions $permissions,
     ) {
     }
 
     public static function create(
         string $role,
-        Permissions $permissions
+        Permissions $permissions,
+        int $roleId = null,
     ): self {
-        return new self(null, $role, $permissions);
+        return new self($roleId, $role, $permissions);
     }
 
     public static function fromDatabase(array $row): self
@@ -34,7 +35,7 @@ class Role
         return $this->roleId;
     }
 
-    public function getRole(): string
+    public function getRoleName(): string
     {
         return $this->role;
     }
@@ -42,6 +43,16 @@ class Role
     public function getPermissions(): Permissions
     {
         return $this->permissions;
+    }
+
+    public function setPermissions(Permissions $permissions): void
+    {
+        $this->permissions = $permissions;
+    }
+
+    public function setRole(string $role): void
+    {
+        $this->role = $role;
     }
 
     public function toArray(): array
