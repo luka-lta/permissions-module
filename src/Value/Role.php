@@ -1,0 +1,71 @@
+<?php
+
+declare(strict_types=1);
+
+namespace PermissionsModule\Value;
+
+class Role
+{
+    public function __construct(
+        private readonly ?int $roleId,
+        private readonly string $role,
+        private readonly Permissions $permissions,
+    ) {
+    }
+
+    public static function create(
+        string $role,
+        Permissions $permissions
+    ): self {
+        return new self(null, $role, $permissions);
+    }
+
+    public static function fromDatabase(array $row): self
+    {
+        return new self(
+            (int)$row['role_id'],
+            $row['role'],
+            Permissions::from($row['permissions']),
+        );
+    }
+
+    public function getRoleId(): ?int
+    {
+        return $this->roleId;
+    }
+
+    public function getRole(): string
+    {
+        return $this->role;
+    }
+
+    public function getPermissions(): Permissions
+    {
+        return $this->permissions;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'roleId' => $this->roleId,
+            'role' => $this->role,
+            'permissions' => $this->permissions->toArray(),
+        ];
+    }
+
+    public function hasPermission(Permission $permission): bool
+    {
+        foreach ($this->permissions as $rolePermission) {
+            if ($rolePermission->getPermissionId() === $permission->getPermissionId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function addPermission(Permission $permission): void
+    {
+        $this->permissions->merge(Permissions::fromObjects($permission));
+    }
+}
