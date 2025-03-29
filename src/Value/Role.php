@@ -26,7 +26,7 @@ class Role
         return new self(
             (int)$row['role_id'],
             $row['role'],
-            Permissions::from($row['permissions']),
+            Permissions::from(...$row['permissions']),
         );
     }
 
