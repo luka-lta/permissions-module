@@ -24,8 +24,19 @@ class RoleRepository
             SELECT 
                 r.role_id,
                 r.role_name,
-                GROUP_CONCAT(p.permission_name) AS permissions,
-                GROUP_CONCAT(p.permission_id) AS permission_ids
+                COALESCE(
+                NULLIF(
+                    JSON_ARRAYAGG(
+                        JSON_OBJECT(
+                            'permission_id', p.permission_id,
+                            'permission_name', p.permission_name,
+                            'permission_description', p.permission_description
+                        )
+                    ),
+                JSON_ARRAY(NULL)
+                ),
+                JSON_ARRAY()
+                ) AS permissions
             FROM 
                 user_roles r
             LEFT JOIN 
@@ -162,8 +173,19 @@ class RoleRepository
             SELECT 
                 r.role_id,
                 r.role_name,
-                GROUP_CONCAT(p.permission_name) AS permissions,
-                GROUP_CONCAT(p.permission_id) AS permission_ids
+                COALESCE(
+                NULLIF(
+                    JSON_ARRAYAGG(
+                        JSON_OBJECT(
+                            'permission_id', p.permission_id,
+                            'permission_name', p.permission_name,
+                            'permission_description', p.permission_description
+                        )
+                    ),
+                JSON_ARRAY(NULL)
+                ),
+                JSON_ARRAY()
+                ) AS permissions
             FROM 
                 user_roles r
             LEFT JOIN 
