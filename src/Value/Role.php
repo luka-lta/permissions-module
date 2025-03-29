@@ -67,7 +67,20 @@ class Role
     public function hasPermission(Permission $permission): bool
     {
         foreach ($this->permissions as $rolePermission) {
+            /** @var Permission $rolePermission */
             if ($rolePermission->getPermissionId() === $permission->getPermissionId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function hasPermissionByName(string $permissioName): bool
+    {
+        foreach ($this->permissions as $rolePermission) {
+            /** @var Permission $rolePermission */
+            if ($rolePermission->getName() === $permissioName) {
                 return true;
             }
         }
