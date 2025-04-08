@@ -17,6 +17,11 @@ class RoleService
     ) {
     }
 
+    public function getDefaultRole(): Role
+    {
+        return $this->roleRepository->getRoleById(1);
+    }
+
     public function getAvailableRoles(): Roles
     {
         return $this->roleRepository->getAvailableRoles();

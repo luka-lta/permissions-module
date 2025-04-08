@@ -23,12 +23,10 @@ class Role
 
     public static function fromDatabase(array $row): self
     {
-        $permissions = json_decode($row['permissions'], true, 512, JSON_THROW_ON_ERROR);
-
         return new self(
             (int)$row['role_id'],
-            $row['role'],
-            Permissions::from($permissions),
+            $row['role_name'],
+            Permissions::from($row['permissions']),
         );
     }
 
