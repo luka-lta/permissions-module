@@ -23,12 +23,12 @@ class Permissions implements IteratorAggregate, JsonSerializable, Countable
         $permissionsList = [];
 
         foreach ($permissions as $permission) {
-            if ($permission['permission_id'] === null) {
-                $permission[] = [];
+            if ($permission[0]['permission_id'] === null) {
+                $permission[0][] = [];
                 continue;
             }
 
-            $permissionsList[] = Permission::fromDatabase($permission);
+            $permissionsList[] = Permission::fromDatabase($permission[0]);
         }
 
         return new self(...$permissionsList);
