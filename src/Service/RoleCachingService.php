@@ -17,7 +17,20 @@ class RoleCachingService
     public function cacheRole(Role $role): void
     {
         try {
-            $this->redis->set('role_' . $role->getRoleId(), json_encode($role->toArray(), JSON_THROW_ON_ERROR));
+            $data = [
+                'role_id' => $role->getRoleId(),
+                'role_name' => $role->getRoleName(),
+                'permissions' => array_map(
+                    static fn($permission) => [
+                        'permission_id' => $permission->getPermissionId(),
+                        'permission_name' => $permission->getName(),
+                        'permission_description' => $permission->getDescription(),
+                    ],
+                    iterator_to_array($role->getPermissions())
+                ),
+            ];
+
+            $this->redis->set('role_' . $role->getRoleId(), json_encode($data, JSON_THROW_ON_ERROR));
         } catch (\RedisException $exception) {
             return;
         }

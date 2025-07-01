@@ -145,7 +145,7 @@ class RoleRepository
             throw new PermissionDatabaseException('Failed to create role', previous: $exception);
         }
 
-        return Role::create($roleName, $permissions, (int)$this->pdo->lastInsertId());
+        return Role::create($roleName, $permissions, $roleId);
     }
 
     public function updateRole(Role $role): void

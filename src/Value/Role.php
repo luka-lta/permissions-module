@@ -23,10 +23,15 @@ class Role
 
     public static function fromDatabase(array $row): self
     {
+        $permissions = $row['permissions'];
+        if (is_string($permissions)) {
+            $permissions = json_decode($permissions, true, 512, JSON_THROW_ON_ERROR);
+        }
+
         return new self(
             (int)$row['role_id'],
             $row['role_name'],
-            Permissions::from($row['permissions']),
+            Permissions::from($permissions),
         );
     }
 
@@ -76,11 +81,11 @@ class Role
         return false;
     }
 
-    public function hasPermissionByName(string $permissioName): bool
+    public function hasPermissionByName(string $permissionName): bool
     {
         foreach ($this->permissions as $rolePermission) {
             /** @var Permission $rolePermission */
-            if ($rolePermission->getName() === $permissioName) {
+            if ($rolePermission->getName() === $permissionName) {
                 return true;
             }
         }
@@ -90,6 +95,6 @@ class Role
 
     public function addPermission(Permission $permission): void
     {
-        $this->permissions->merge(Permissions::fromObjects($permission));
+        $this->permissions = $this->permissions->merge(Permissions::fromObjects($permission));
     }
 }
