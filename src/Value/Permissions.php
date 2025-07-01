@@ -18,17 +18,16 @@ class Permissions implements IteratorAggregate, JsonSerializable, Countable
         $this->permissions = $permissions;
     }
 
-    public static function from(array ...$permissions): self
+    public static function from(array $permissions): self
     {
         $permissionsList = [];
 
         foreach ($permissions as $permission) {
-            if ($permission[0]['permission_id'] === null) {
-                $permission[0][] = [];
+            if ($permission === null || ($permission['permission_id'] ?? null) === null) {
                 continue;
             }
 
-            $permissionsList[] = Permission::fromDatabase($permission[0]);
+            $permissionsList[] = Permission::fromDatabase($permission);
         }
 
         return new self(...$permissionsList);
@@ -51,7 +50,7 @@ class Permissions implements IteratorAggregate, JsonSerializable, Countable
 
     public function merge(Permissions $other): self
     {
-        $mergedPermissions = array_merge($this->toArray(), $other->toArray());
+        $mergedPermissions = array_merge($this->permissions, iterator_to_array($other));
 
         return new self(...$mergedPermissions);
     }
